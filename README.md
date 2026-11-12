@@ -1,22 +1,16 @@
-# JUNG HWAN's DAILY
+# JUNG HWAN'S DAILY
 
-A responsive fan-memory archive for SO JUNG HWAN, built with HTML/CSS/JS and Supabase.
+A mobile-first, phone-portrait fan memory archive in a soft powder-blue and pastel-pink Korean-inspired style.
+
+## Files
+- `index.html` — page structure and bottom navigation
+- `style.css` — mobile-first layout (the content stays in a phone-width app frame on desktop too)
+- `app.js` — Supabase loading, admin magic-link login, entry publishing, editing, deleting and photo uploads
 
 ## Publish with GitHub Pages
-1. Create a **new** repository named `jung-hwan-daily`. Do not reuse your old repository.
-2. Upload `index.html`, `style.css`, `app.js`, and this README to the repository root.
-3. Open **Settings → Pages**.
-4. Choose **Deploy from a branch**, select `main` and `/(root)`, then Save.
-5. GitHub will display the published URL, normally `https://YOUR-USERNAME.github.io/jung-hwan-daily/`.
+Upload these four files directly to the root of the `Junghwan-daily` repository. In Settings → Pages, select `Deploy from a branch`, branch `main`, folder `/(root)`.
 
-## Supabase redirect setup
-After you know the GitHub Pages URL, open project `JungHwanDaily` → Authentication → URL Configuration:
-- Set Site URL to the exact published URL.
-- Add that URL to Redirect URLs.
-- Save changes.
+## Supabase
+The frontend is configured to use the existing Supabase project. In Supabase → Authentication → URL Configuration, set Site URL and Redirect URLs to the final GitHub Pages URL, for example `https://YOUR-USERNAME.github.io/Junghwan-daily/`.
 
-## Admin publishing
-Open ADMIN on the site and request a magic link for `180498829@qq.com`. Open the email link on the same device/browser. The admin panel supports adding, editing, deleting entries and uploading multiple images.
-
-## Security
-The browser uses the Supabase publishable key, not a service-role key. Database RLS and Storage policies must remain enabled. Never place a service-role key in frontend files.
+Only the publishable key is used in the frontend. Never put a service-role key in this repository.
