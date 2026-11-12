@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#e5f2ff"><title>JUNG HWAN's DAILY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="site-shell">
+<header class="topbar"><a class="brand" href="#"><span>✳</span> JUNG HWAN's DAILY</a><button id="admin-open" class="admin-link">ADMIN ↗</button></header>
+<main>
+<section class="hero">
+ <div class="hero-copy"><p class="eyebrow">A LITTLE ARCHIVE OF EVERY DAY</p><h1>JUNG HWAN<br><em>daily moments.</em></h1>
+ <p class="hero-desc">Collecting little moments, lovely memories<br>and everything that makes today special.</p>
+ <a href="#archive" class="scroll-link">SCROLL TO EXPLORE <b>↓</b></a></div>
+ <div class="hero-art"><div class="orb blue"></div><div class="orb pink"></div><div class="sparkle one">✦</div><div class="photo-placeholder"><span>YOUR FAVORITE<br>JUNG HWAN PHOTO</span><b>♡</b></div><div class="art-note">made with love, always ♡</div></div>
+ <div class="hero-sticker">OUR<br>DAILY<br>♡</div>
+</section>
+<div class="intro-strip"><span>SO JUNG HWAN</span><i>✳</i><span>MEMORY ARCHIVE</span><i>✳</i><span>EST. 2026</span></div>
+<section id="archive" class="archive-section">
+ <div class="section-heading"><div><p class="eyebrow">THE MEMORY BOX</p><h2>Daily <em>Archive</em></h2></div><p class="section-side">A day, a moment,<br>a memory to keep.</p></div>
+ <div class="archive-tools"><label class="search-box">⌕ <input id="search-input" placeholder="Search memories..." type="search"></label><select id="year-filter"><option value="all">ALL YEARS</option></select></div>
+ <div id="entries" class="entries-grid"><div class="empty-state"><span>♡</span><h3>Our story starts here</h3><p>管理员发布的日常内容会出现在这里。</p></div></div>
+</section>
+<section class="gallery-section"><div class="gallery-heading"><p class="eyebrow">LITTLE THINGS, BIG LOVE</p><h2>Photo <em>Gallery</em></h2></div><div id="gallery" class="gallery-grid"><div class="gallery-note">Your favorite moments<br>will live here ♡</div><div class="gallery-note pale">A collection of<br>soft memories ✳</div><div class="gallery-note pink">Always cheering<br>for you ♡</div></div></section>
+<section class="quote-section"><span class="quote-mark">“</span><p>Every little moment<br>is worth remembering.</p><span class="quote-credit">WITH LOVE, FOR JUNG HWAN ♡</span></section>
+</main>
+<footer><span>JUNG HWAN's DAILY</span><span>MADE WITH ♡ BY FANS</span><a href="#">BACK TO TOP ↑</a></footer>
+</div>
+<div id="admin-modal" class="modal hidden" role="dialog" aria-modal="true">
+<div class="modal-card"><button id="modal-close" class="modal-close">×</button><p class="eyebrow">PRIVATE SPACE</p><h2>Admin <em>Login</em></h2><p class="modal-desc">管理员使用邮箱接收登录链接。</p>
+<form id="login-form"><label class="field-label">EMAIL ADDRESS</label><input id="admin-email" type="email" value="180498829@qq.com" required><button class="primary-btn">SEND MAGIC LINK ↗</button></form><p id="login-message" class="form-message"></p>
+<div id="admin-panel" class="admin-panel hidden"><div class="panel-top"><h3>New memory ✳</h3><button id="logout-btn" class="text-btn" type="button">LOG OUT</button></div>
+<form id="entry-form"><input type="hidden" id="entry-id"><label class="field-label">DATE</label><input id="entry-date" type="date" required><label class="field-label">TITLE</label><input id="entry-title" required placeholder="A lovely day..."><label class="field-label">LOCATION / TAG</label><input id="entry-city" placeholder="Seoul, behind the scenes..."><label class="field-label">STORY</label><textarea id="entry-content" rows="4" placeholder="Write a little memory..."></textarea><label class="field-label">PHOTOS (MULTIPLE ALLOWED)</label><input id="entry-photos" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple><button class="primary-btn">PUBLISH MEMORY ↗</button></form><p id="entry-message" class="form-message"></p><div id="manage-list" class="manage-list"></div></div>
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="app.js"></script>
+</body></html>
