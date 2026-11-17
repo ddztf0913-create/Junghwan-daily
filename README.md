@@ -1,16 +1,20 @@
-# JUNG HWAN'S DAILY
+# JUNG HWAN's DAILY — mobile edition
 
-A mobile-first, phone-portrait fan memory archive in a soft powder-blue and pastel-pink Korean-inspired style.
+A phone-first Korean pastel pink/blue fan diary with a monthly calendar and photo gallery.
 
-## Files
-- `index.html` — page structure and bottom navigation
-- `style.css` — mobile-first layout (the content stays in a phone-width app frame on desktop too)
-- `app.js` — Supabase loading, admin magic-link login, entry publishing, editing, deleting and photo uploads
+## Features
+- Calendar-first Daily archive: month navigation, date selection, colored dots on dates with entries, and selected-day memories.
+- Separate Photo gallery. Admins can upload photos independently without creating a Daily diary entry.
+- Admin email magic-link login, create/edit/delete daily memories, multi-image upload.
+- Supabase Storage bucket `daily-photos` and existing `daily_entries` table are used.
 
-## Publish with GitHub Pages
-Upload these four files directly to the root of the `Junghwan-daily` repository. In Settings → Pages, select `Deploy from a branch`, branch `main`, folder `/(root)`.
+## Publish
+Upload the four files (`index.html`, `style.css`, `app.js`, `README.md`) to the root of the GitHub Pages repository and commit the changes.
 
-## Supabase
-The frontend is configured to use the existing Supabase project. In Supabase → Authentication → URL Configuration, set Site URL and Redirect URLs to the final GitHub Pages URL, for example `https://YOUR-USERNAME.github.io/Junghwan-daily/`.
+## Admin use
+1. Open ADMIN and request a magic link for the configured admin email.
+2. Open the email link on the same device/browser.
+3. To add a dated diary entry, use the New memory form.
+4. To upload photos independently, use the separate **Upload to Photo** form. These are stored as gallery-only records and do not appear as calendar diary entries.
 
-Only the publishable key is used in the frontend. Never put a service-role key in this repository.
+Supabase project URL and publishable key are configured in `app.js`. Never put a service-role key in frontend code.

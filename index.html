@@ -19,9 +19,15 @@
  <div class="hero-bottom"><span>SO JUNG HWAN</span><span>EST. 2026　✳　MEMORY ARCHIVE</span></div>
 </section>
 <section id="archive" class="archive-section">
- <div class="section-heading"><div><p class="eyebrow">THE MEMORY BOX</p><h2>Daily <em>Archive</em></h2></div><span class="heading-heart">♡</span></div>
- <p class="section-caption">작은 순간도 소중하게 · 每一天都值得记录</p>
- <div class="archive-tools"><label class="search-box"><span>⌕</span><input id="search-input" placeholder="Search memories..." type="search" aria-label="搜索日常"></label><select id="year-filter" aria-label="按年份筛选"><option value="all">ALL YEARS</option></select></div>
+ <div class="calendar-head"><div><p class="eyebrow">THE MEMORY BOX</p><h2>Daily <em>Calendar</em></h2></div><span class="heading-heart">♡</span></div>
+ <p class="section-caption">点亮的日期，收藏着和庭焕有关的小小瞬间</p>
+ <div class="calendar-card">
+  <div class="calendar-title-row"><h3>月日历</h3><span>点击查看当天</span></div>
+  <div class="month-switch"><button id="month-prev" aria-label="上个月">‹</button><strong id="month-label"></strong><button id="month-next" aria-label="下个月">›</button></div>
+  <div class="calendar-weekdays"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+  <div id="calendar-days" class="calendar-days"></div>
+ </div>
+ <div class="selected-day-head"><div><p class="eyebrow">YOUR SELECTED MEMORY</p><h3 id="selected-date-title">选择一个日期</h3></div><span class="selected-heart">♡</span></div>
  <div id="entries" class="entries-grid"><div class="empty-state"><span>♡</span><h3>Our story starts here</h3><p>管理员发布的日常内容会出现在这里。</p></div></div>
 </section>
 <section id="gallery-section" class="gallery-section"><div class="gallery-heading"><p class="eyebrow">LITTLE THINGS, BIG LOVE</p><h2>Photo <em>Gallery</em></h2><p>모든 순간을 담아둘게 ♡</p></div><div id="gallery" class="gallery-grid"><div class="gallery-note">Your favorite moments<br>will live here ♡</div><div class="gallery-note pale">A collection of<br>soft memories ✳</div><div class="gallery-note pink">Always cheering<br>for you ♡</div></div></section>
@@ -33,7 +39,9 @@
 <div id="admin-modal" class="modal hidden" role="dialog" aria-modal="true" aria-label="管理员登录"><div class="modal-card"><button id="modal-close" class="modal-close" aria-label="关闭">×</button><div class="modal-handle"></div><p class="eyebrow">A LITTLE PRIVATE SPACE</p><h2>Admin <em>Login</em></h2><p class="modal-desc">管理员使用邮箱接收安全登录链接。</p>
 <form id="login-form"><label class="field-label">EMAIL ADDRESS</label><input id="admin-email" type="email" value="180498829@qq.com" required><button class="primary-btn">SEND MAGIC LINK ↗</button></form><p id="login-message" class="form-message"></p>
 <div id="admin-panel" class="admin-panel hidden"><div class="panel-top"><h3>New memory ✳</h3><button id="logout-btn" class="text-btn" type="button">LOG OUT</button></div>
-<form id="entry-form"><input type="hidden" id="entry-id"><label class="field-label">DATE</label><input id="entry-date" type="date" required><label class="field-label">TITLE</label><input id="entry-title" required placeholder="A lovely day..."><label class="field-label">LOCATION / TAG</label><input id="entry-city" placeholder="Seoul, behind the scenes..."><label class="field-label">STORY</label><textarea id="entry-content" rows="4" placeholder="Write a little memory..."></textarea><label class="field-label">PHOTOS (MULTIPLE ALLOWED)</label><input id="entry-photos" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple><button class="primary-btn">PUBLISH MEMORY ↗</button></form><p id="entry-message" class="form-message"></p><div id="manage-list" class="manage-list"></div></div>
+<form id="entry-form"><input type="hidden" id="entry-id"><label class="field-label">DATE</label><input id="entry-date" type="date" required><label class="field-label">TITLE</label><input id="entry-title" required placeholder="A lovely day..."><label class="field-label">LOCATION / TAG</label><input id="entry-city" placeholder="Seoul, behind the scenes..."><label class="field-label">STORY</label><textarea id="entry-content" rows="4" placeholder="Write a little memory..."></textarea><label class="field-label">PHOTOS (MULTIPLE ALLOWED)</label><input id="entry-photos" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple><button class="primary-btn">PUBLISH MEMORY ↗</button></form><p id="entry-message" class="form-message"></p>
+<div class="gallery-upload-box"><h3>Upload to Photo ♡</h3><p>独立上传照片，不需要创建 Daily 日记。</p><form id="gallery-upload-form"><label class="field-label">PHOTO DATE</label><input id="gallery-photo-date" type="date" required><label class="field-label">CHOOSE PHOTOS</label><input id="gallery-photo-files" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple required><button class="primary-btn">UPLOAD TO PHOTO ↗</button></form><p id="gallery-upload-message" class="form-message"></p></div>
+<div id="manage-list" class="manage-list"></div></div>
 </div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="app.js"></script>
 </body></html>
