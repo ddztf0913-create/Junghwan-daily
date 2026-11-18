@@ -8,6 +8,24 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const fmt=s=>s?new Date(s+"T00:00:00").toLocaleDateString("zh-CN",{year:"numeric",month:"long",day:"numeric",weekday:"long"}):"";
 const dailyEntries=()=>entries.filter(e=>e.city!==GALLERY_TAG);
 const galleryEntries=()=>entries.filter(e=>e.city===GALLERY_TAG);
+// Normalize legacy photo values and rebuild public URLs from their stored object paths.
+function photoUrls(entry){
+ let value=entry?.photos;
+ if(!value)return [];
+ if(typeof value==='string'){try{value=JSON.parse(value)}catch{value=[value]}}
+ if(!Array.isArray(value))return [];
+ return value.map(item=>{
+  const raw=typeof item==='string'?item:(item?.url||item?.publicUrl||item?.public_url||'');
+  if(!raw)return '';
+  try{
+   const marker='/daily-photos/';
+   const at=raw.indexOf(marker);
+   if(at>=0){const objectPath=raw.slice(at+marker.length).split('?')[0];return db.storage.from(BUCKET).getPublicUrl(decodeURIComponent(objectPath)).data.publicUrl;}
+   if(/^https?:\/\//i.test(raw))return raw;
+   return db.storage.from(BUCKET).getPublicUrl(raw.replace(/^\/+/, '')).data.publicUrl;
+  }catch{return raw}
+ }).filter(Boolean);
+}
 const openAdmin=()=>$('admin-modal').classList.remove('hidden');
 $('admin-open').onclick=openAdmin;$('nav-admin').onclick=openAdmin;
 $('modal-close').onclick=()=>$('admin-modal').classList.add('hidden');
@@ -28,7 +46,7 @@ function renderSelectedDay(){
  $('selected-date-title').textContent=fmt(selectedDate);
  const rows=dailyEntries().filter(e=>e.entry_date===selectedDate).sort((a,b)=>(b.created_at||'').localeCompare(a.created_at||''));
  const texts=rows.filter(e=>(e.content||'').trim()).map(e=>({title:e.title,city:e.city,content:e.content,date:e.entry_date}));
- const images=rows.flatMap(e=>(e.photos||[]).map(url=>({url,date:e.entry_date,title:e.title})));
+ const images=rows.flatMap(e=>photoUrls(e).map(url=>({url,date:e.entry_date,title:e.title})));
  const videos=rows.flatMap(e=>(e.videos||[]).map(url=>({url,date:e.entry_date,title:e.title})));
  const stickers=rows.flatMap(e=>(e.stickers||[]).map(value=>({value,date:e.entry_date,title:e.title})));
  const textCountInput=$('count-text');
@@ -41,8 +59,8 @@ function renderSelectedDay(){
   $('daily-category-content').innerHTML=data.length?data.map(e=>`<article class="entry-card"><div class="entry-meta"><span class="entry-date">${esc(fmt(e.date))}</span><span>✳ DAILY LOG</span></div><h3>${esc(e.title)}</h3>${e.city?`<div class="entry-city">⌖ ${esc(e.city)}</div>`:''}<div class="entry-content">${esc(e.content)}</div></article>`).join(''):`<div class="category-empty">还没有文字记录 ♡</div>`;
  }else if(activeCategory==='images'){
   lightboxImages=images.map(x=>x.url);
-  $('daily-category-content').innerHTML=data.length?`<div class="day-image-grid">${data.map((e,i)=>`<button class="day-image-button" data-image-index="${i}" aria-label="查看图片"><img src="${esc(e.url)}" loading="lazy" alt="Daily photo"><span>${esc(e.title||e.date)}</span></button>`).join('')}</div>`:`<div class="category-empty">这一天还没有图片 ♡</div>`;
-  document.querySelectorAll('[data-image-index]').forEach(b=>b.onclick=()=>openLightbox(Number(b.dataset.imageIndex)));
+  $('daily-category-content').innerHTML=data.length?`<div class="day-image-grid">${data.map((e,i)=>`<button class="day-image-button" data-image-index="${i}" aria-label="查看图片"><img src="${esc(e.url)}" loading="eager" alt="Daily photo"><span>${esc(e.title||e.date)}</span></button>`).join('')}</div>`:`<div class="category-empty">这一天还没有图片 ♡</div>`;
+  document.querySelectorAll('[data-image-index]').forEach(b=>b.onclick=()=>openLightbox(Number(b.dataset.imageIndex)));document.querySelectorAll('#daily-category-content img').forEach(img=>{img.onerror=()=>{img.alt='图片暂时无法加载';img.style.opacity='.35';img.title='图片加载失败，请检查网络后刷新';};});
  }else if(activeCategory==='videos'){
   $('daily-category-content').innerHTML=data.length?`<div class="day-video-list">${data.map(e=>`<article class="day-video-card"><video src="${esc(e.url)}" controls playsinline preload="metadata"></video><p>${esc(e.title||e.date)}</p></article>`).join('')}</div>`:`<div class="category-empty">这一天还没有视频 ♡</div>`;
  }else{
@@ -56,8 +74,8 @@ $('lightbox-close').onclick=()=>$('image-lightbox').classList.add('hidden');$('l
 document.querySelectorAll('.daily-category').forEach(b=>b.onclick=()=>{activeCategory=b.dataset.category;renderSelectedDay()});
 $('day-prev').onclick=()=>changeSelectedDay(-1);$('day-next').onclick=()=>changeSelectedDay(1);
 function changeSelectedDay(n){const d=new Date(selectedDate+'T00:00:00');d.setDate(d.getDate()+n);selectedDate=localISO(d);viewMonth=new Date(d.getFullYear(),d.getMonth(),1);renderCalendar()}
-function renderGallery(){const pics=galleryEntries().flatMap(e=>(e.photos||[]).map(url=>({url,date:e.entry_date}))).concat(dailyEntries().flatMap(e=>(e.photos||[]).map(url=>({url,date:e.entry_date}))));
- lightboxImages=pics.map(p=>p.url);$('gallery').innerHTML=pics.length?pics.map((p,i)=>`<figure class="gallery-item"><button class="gallery-open-photo" data-gallery-index="${i}" aria-label="查看照片"><img class="gallery-photo" src="${esc(p.url)}" loading="lazy" alt="Gallery memory"></button><figcaption>${esc(p.date||'JUNG HWAN DAILY')}</figcaption></figure>`).join(''):`<div class="gallery-note">Your favorite moments<br>will live here ♡</div><div class="gallery-note pale">A collection of<br>soft memories ✳</div><div class="gallery-note pink">Always cheering<br>for you ♡</div>`;document.querySelectorAll('[data-gallery-index]').forEach(b=>b.onclick=()=>openLightbox(Number(b.dataset.galleryIndex)));
+function renderGallery(){const pics=entries.flatMap(e=>photoUrls(e).map(url=>({url,date:e.entry_date})));
+ lightboxImages=pics.map(p=>p.url);$('gallery').innerHTML=pics.length?pics.map((p,i)=>`<figure class="gallery-item"><button class="gallery-open-photo" data-gallery-index="${i}" aria-label="查看照片"><img class="gallery-photo" src="${esc(p.url)}" loading="eager" alt="Gallery memory"></button><figcaption>${esc(p.date||'JUNG HWAN DAILY')}</figcaption></figure>`).join(''):`<div class="gallery-note">Your favorite moments<br>will live here ♡</div><div class="gallery-note pale">A collection of<br>soft memories ✳</div><div class="gallery-note pink">Always cheering<br>for you ♡</div>`;document.querySelectorAll('[data-gallery-index]').forEach(b=>b.onclick=()=>openLightbox(Number(b.dataset.galleryIndex)));document.querySelectorAll('#gallery img, #daily-category-content img').forEach(img=>{img.onerror=()=>{img.alt='图片暂时无法加载';img.style.opacity='.35';img.title='图片加载失败，请检查网络后刷新';};});
 }
 function render(){renderCalendar();renderGallery();manage()}
 async function load(){const {data,error}=await db.from('daily_entries').select('*').order('entry_date',{ascending:false}).order('created_at',{ascending:false});if(error){console.error(error);$('daily-category-content').innerHTML='<div class="empty-state">暂时无法读取记录，请稍后刷新。</div>';return}entries=data||[];render()}
