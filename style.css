@@ -75,3 +75,9 @@
 #lightbox-caption{position:absolute;bottom:23px;color:#fff;font-size:11px;letter-spacing:.12em}
 @media(max-width:360px){.daily-category-grid{gap:5px}.daily-category{min-height:75px;border-radius:14px}.daily-category strong{font-size:17px}.daily-category small{font-size:9px}}
 .video-dot{background:#8db4e5}
+
+/* Editable daily text counter */
+.text-count-card{cursor:default}
+.daily-count-input{display:block;width:100%;min-width:0;margin:0 auto 2px;padding:0;border:0;outline:0;background:transparent;color:#405f78;text-align:center;font:inherit;font-size:17px;font-weight:700;line-height:1.25;appearance:textfield;-moz-appearance:textfield}
+.daily-count-input::-webkit-inner-spin-button,.daily-count-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.daily-count-input:focus{color:#3998c4;text-decoration:underline;text-decoration-color:#b8dff0;text-underline-offset:4px}

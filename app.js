@@ -31,7 +31,11 @@ function renderSelectedDay(){
  const images=rows.flatMap(e=>(e.photos||[]).map(url=>({url,date:e.entry_date,title:e.title})));
  const videos=rows.flatMap(e=>(e.videos||[]).map(url=>({url,date:e.entry_date,title:e.title})));
  const stickers=rows.flatMap(e=>(e.stickers||[]).map(value=>({value,date:e.entry_date,title:e.title})));
- $('count-text').textContent=texts.length;$('count-stickers').textContent=stickers.length;$('count-images').textContent=images.length;$('count-videos').textContent=videos.length;
+ const textCountInput=$('count-text');
+ const savedTextCount=localStorage.getItem('daily-text-count:'+selectedDate);
+ textCountInput.value=savedTextCount!==null?savedTextCount:texts.length;
+ textCountInput.oninput=()=>{localStorage.setItem('daily-text-count:'+selectedDate,textCountInput.value)};
+ $('count-stickers').textContent=stickers.length;$('count-images').textContent=images.length;$('count-videos').textContent=videos.length;
  const data={text:texts,stickers,images,videos}[activeCategory];
  if(activeCategory==='text'){
   $('daily-category-content').innerHTML=data.length?data.map(e=>`<article class="entry-card"><div class="entry-meta"><span class="entry-date">${esc(fmt(e.date))}</span><span>✳ DAILY LOG</span></div><h3>${esc(e.title)}</h3>${e.city?`<div class="entry-city">⌖ ${esc(e.city)}</div>`:''}<div class="entry-content">${esc(e.content)}</div></article>`).join(''):`<div class="category-empty">还没有文字记录 ♡</div>`;
@@ -52,7 +56,6 @@ $('lightbox-close').onclick=()=>$('image-lightbox').classList.add('hidden');$('l
 document.querySelectorAll('.daily-category').forEach(b=>b.onclick=()=>{activeCategory=b.dataset.category;renderSelectedDay()});
 $('day-prev').onclick=()=>changeSelectedDay(-1);$('day-next').onclick=()=>changeSelectedDay(1);
 function changeSelectedDay(n){const d=new Date(selectedDate+'T00:00:00');d.setDate(d.getDate()+n);selectedDate=localISO(d);viewMonth=new Date(d.getFullYear(),d.getMonth(),1);renderCalendar()}
-$('day-play').onclick=()=>{const videos=[...document.querySelectorAll('.day-video-list video')];if(videos.length){videos[0].play();return}const imgs=lightboxImages;if(imgs.length){activeCategory='images';renderSelectedDay();openLightbox(0)}else{$('day-play').textContent='♡';setTimeout(()=>$('day-play').textContent='▶',900)}};
 function renderGallery(){const pics=galleryEntries().flatMap(e=>(e.photos||[]).map(url=>({url,date:e.entry_date}))).concat(dailyEntries().flatMap(e=>(e.photos||[]).map(url=>({url,date:e.entry_date}))));
  lightboxImages=pics.map(p=>p.url);$('gallery').innerHTML=pics.length?pics.map((p,i)=>`<figure class="gallery-item"><button class="gallery-open-photo" data-gallery-index="${i}" aria-label="查看照片"><img class="gallery-photo" src="${esc(p.url)}" loading="lazy" alt="Gallery memory"></button><figcaption>${esc(p.date||'JUNG HWAN DAILY')}</figcaption></figure>`).join(''):`<div class="gallery-note">Your favorite moments<br>will live here ♡</div><div class="gallery-note pale">A collection of<br>soft memories ✳</div><div class="gallery-note pink">Always cheering<br>for you ♡</div>`;document.querySelectorAll('[data-gallery-index]').forEach(b=>b.onclick=()=>openLightbox(Number(b.dataset.galleryIndex)));
 }
