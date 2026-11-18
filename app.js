@@ -27,14 +27,14 @@ function renderCalendar(){
 function renderSelectedDay(){
  $('selected-date-title').textContent=fmt(selectedDate);
  const rows=dailyEntries().filter(e=>e.entry_date===selectedDate).sort((a,b)=>(b.created_at||'').localeCompare(a.created_at||''));
- const texts=rows.filter(e=>(e.content||'').trim()).map(e=>({title:e.title,city:e.city,content:e.content,date:e.entry_date}));
+ const texts=rows.filter(e=>(e.title||e.content||'').trim()).map(e=>({title:e.title,city:e.city,content:e.content,date:e.entry_date}));
  const images=rows.flatMap(e=>(e.photos||[]).map(url=>({url,date:e.entry_date,title:e.title})));
  const videos=rows.flatMap(e=>(e.videos||[]).map(url=>({url,date:e.entry_date,title:e.title})));
  const stickers=rows.flatMap(e=>(e.stickers||[]).map(value=>({value,date:e.entry_date,title:e.title})));
  $('count-text').textContent=texts.length;$('count-stickers').textContent=stickers.length;$('count-images').textContent=images.length;$('count-videos').textContent=videos.length;
  const data={text:texts,stickers,images,videos}[activeCategory];
  if(activeCategory==='text'){
-  $('daily-category-content').innerHTML=data.length?data.map(e=>`<article class="entry-card"><div class="entry-meta"><span class="entry-date">${esc(fmt(e.date))}</span><span>✳ DAILY LOG</span></div><h3>${esc(e.title)}</h3>${e.city?`<div class="entry-city">⌖ ${esc(e.city)}</div>`:''}<div class="entry-content">${esc(e.content)}</div></article>`).join(''):`<div class="category-empty">还没有文字记录 ♡</div>`;
+  $('daily-category-content').innerHTML=data.length?data.map(e=>`<article class="entry-card"><div class="entry-meta"><span class="entry-date">${esc(fmt(e.date))}</span><span>✳ DAILY LOG</span></div><h3>${esc(e.title)}</h3></article>`).join(''):`<div class="category-empty">还没有文字记录 ♡</div>`;
  }else if(activeCategory==='images'){
   lightboxImages=images.map(x=>x.url);
   $('daily-category-content').innerHTML=data.length?`<div class="day-image-grid">${data.map((e,i)=>`<button class="day-image-button" data-image-index="${i}" aria-label="查看图片"><img src="${esc(e.url)}" loading="lazy" alt="Daily photo"><span>${esc(e.title||e.date)}</span></button>`).join('')}</div>`:`<div class="category-empty">这一天还没有图片 ♡</div>`;
@@ -50,9 +50,6 @@ function openLightbox(index){lightboxIndex=index;$('lightbox-image').src=lightbo
 function moveLightbox(delta){if(!lightboxImages.length)return;lightboxIndex=(lightboxIndex+delta+lightboxImages.length)%lightboxImages.length;openLightbox(lightboxIndex)}
 $('lightbox-close').onclick=()=>$('image-lightbox').classList.add('hidden');$('lightbox-prev').onclick=()=>moveLightbox(-1);$('lightbox-next').onclick=()=>moveLightbox(1);$('image-lightbox').onclick=e=>{if(e.target.id==='image-lightbox')e.currentTarget.classList.add('hidden')};
 document.querySelectorAll('.daily-category').forEach(b=>b.onclick=()=>{activeCategory=b.dataset.category;renderSelectedDay()});
-$('day-prev').onclick=()=>changeSelectedDay(-1);$('day-next').onclick=()=>changeSelectedDay(1);
-function changeSelectedDay(n){const d=new Date(selectedDate+'T00:00:00');d.setDate(d.getDate()+n);selectedDate=localISO(d);viewMonth=new Date(d.getFullYear(),d.getMonth(),1);renderCalendar()}
-$('day-play').onclick=()=>{const videos=[...document.querySelectorAll('.day-video-list video')];if(videos.length){videos[0].play();return}const imgs=lightboxImages;if(imgs.length){activeCategory='images';renderSelectedDay();openLightbox(0)}else{$('day-play').textContent='♡';setTimeout(()=>$('day-play').textContent='▶',900)}};
 function renderGallery(){const pics=galleryEntries().flatMap(e=>(e.photos||[]).map(url=>({url,date:e.entry_date}))).concat(dailyEntries().flatMap(e=>(e.photos||[]).map(url=>({url,date:e.entry_date}))));
  lightboxImages=pics.map(p=>p.url);$('gallery').innerHTML=pics.length?pics.map((p,i)=>`<figure class="gallery-item"><button class="gallery-open-photo" data-gallery-index="${i}" aria-label="查看照片"><img class="gallery-photo" src="${esc(p.url)}" loading="lazy" alt="Gallery memory"></button><figcaption>${esc(p.date||'JUNG HWAN DAILY')}</figcaption></figure>`).join(''):`<div class="gallery-note">Your favorite moments<br>will live here ♡</div><div class="gallery-note pale">A collection of<br>soft memories ✳</div><div class="gallery-note pink">Always cheering<br>for you ♡</div>`;document.querySelectorAll('[data-gallery-index]').forEach(b=>b.onclick=()=>openLightbox(Number(b.dataset.galleryIndex)));
 }
@@ -67,3 +64,4 @@ $('entry-form').onsubmit=async e=>{e.preventDefault();$('entry-message').textCon
 $('gallery-upload-form').onsubmit=async e=>{e.preventDefault();$('gallery-upload-message').textContent='Uploading photos...';if(!await session()){$('gallery-upload-message').textContent='Please sign in first.';return}try{const urls=await upload([...$('gallery-photo-files').files]);if(!urls.length)throw new Error('请选择图片');const payload={entry_date:$('gallery-photo-date').value,title:'PHOTO GALLERY',city:GALLERY_TAG,content:'',photos:urls};const {error}=await db.from('daily_entries').insert(payload);if(error)throw error;$('gallery-upload-form').reset();$('gallery-photo-date').value=localISO(new Date());$('gallery-upload-message').textContent=`Uploaded ${urls.length} photo(s) ♡`;await load()}catch(err){$('gallery-upload-message').textContent='Upload failed: '+err.message}};
 function manage(){if($('admin-panel').classList.contains('hidden'))return;$('manage-list').innerHTML=entries.map(e=>`<div class="manage-item"><span>${esc(e.entry_date)} · ${esc(e.city===GALLERY_TAG?'PHOTO GALLERY':e.title)}</span><span>${e.city===GALLERY_TAG?'PHOTO':''} <button data-del="${esc(e.id)}">DELETE</button></span></div>`).join('');document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{const e=entries.find(x=>x.id===b.dataset.edit);$('entry-id').value=e.id;$('entry-date').value=e.entry_date;$('entry-title').value=e.title;$('entry-city').value=e.city||'';$('entry-content').value=e.content||'';$('entry-message').textContent='Editing: selected new photos will be added.'});document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(confirm('Delete this record?')){const {error}=await db.from('daily_entries').delete().eq('id',b.dataset.del);if(error)alert(error.message);else load()}})}
 $('entry-date').value=localISO(new Date());$('gallery-photo-date').value=localISO(new Date());session().then(load);
+//（注：内容由AI生成）

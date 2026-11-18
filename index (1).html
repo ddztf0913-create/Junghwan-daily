@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#eaf4ff"><meta name="description" content="JUNG HWAN's DAILY — a little archive of lovely moments.">
+<title>JUNG HWAN's DAILY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app-shell">
+<header class="topbar"><a class="brand" href="#home"><span class="brand-star">✳</span><span>JUNG HWAN'S DAILY</span></a><button id="admin-open" class="admin-link" aria-label="管理员登录">♡ <small>ADMIN</small></button></header>
+<main>
+<section id="home" class="hero">
+ <div class="hero-topline"><span>OUR LITTLE MEMORY BOOK</span><span class="live-dot">● ONLINE</span></div>
+ <div class="hero-copy"><p class="eyebrow">A DAY WITH YOU, A MEMORY FOREVER</p><h1>JUNG HWAN<br><em>daily log ♡</em></h1><p class="hero-desc">오늘도 너와 함께한 순간<br>把每一个喜欢的瞬间，好好收藏。</p></div>
+ <div class="hero-art"><div class="orb blue"></div><div class="orb pink"></div><div class="photo-placeholder"><span>YOUR FAVORITE<br>JUNG HWAN PHOTO</span><b>♡</b></div><span class="art-sparkle sparkle-a">✦</span><span class="art-sparkle sparkle-b">✳</span><div class="art-note">always, with love</div></div>
+ <div class="hero-bottom"><span>SO JUNG HWAN</span><span>EST. 2026　✳　MEMORY ARCHIVE</span></div>
+</section>
+<section id="archive" class="archive-section">
+ <div class="calendar-head"><div><p class="eyebrow">THE MEMORY BOX</p><h2>Daily <em>Calendar</em></h2></div><span class="heading-heart">♡</span></div>
+ <p class="section-caption">点亮的日期，收藏着和庭焕有关的小小瞬间</p>
+ <div class="calendar-card">
+  <div class="calendar-title-row"><h3>月日历</h3><span>点击查看当天</span></div>
+  <div class="month-switch"><button id="month-prev" aria-label="上个月">‹</button><strong id="month-label"></strong><button id="month-next" aria-label="下个月">›</button></div>
+  <div class="calendar-weekdays"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+  <div id="calendar-days" class="calendar-days"></div>
+ </div>
+ <div class="selected-day-head"><div><p class="eyebrow">YOUR SELECTED MEMORY</p><h3 id="selected-date-title">选择一个日期</h3></div><span class="selected-heart">♡</span></div>
+ <div class="daily-category-grid" aria-label="当天内容分类">
+  <button class="daily-category active" data-category="text"><span class="category-icon">▱</span><strong id="count-text">0</strong><small>文字</small></button>
+  <button class="daily-category" data-category="stickers"><span class="category-icon">☺</span><strong id="count-stickers">0</strong><small>表情包</small></button>
+  <button class="daily-category" data-category="images"><span class="category-icon">▧</span><strong id="count-images">0</strong><small>图片</small></button>
+  <button class="daily-category" data-category="videos"><span class="category-icon">▷</span><strong id="count-videos">0</strong><small>视频</small></button>
+ </div>
+ <div id="daily-category-content" class="daily-category-content"><div class="empty-state"><span>♡</span><h3>Our story starts here</h3><p>选择日期，查看当天收藏的内容。</p></div></div>
+</section>
+<section id="gallery-section" class="gallery-section"><div class="gallery-heading"><p class="eyebrow">LITTLE THINGS, BIG LOVE</p><h2>Photo <em>Gallery</em></h2><p>모든 순간을 담아둘게 ♡</p></div><div id="gallery" class="gallery-grid"><div class="gallery-note">Your favorite moments<br>will live here ♡</div><div class="gallery-note pale">A collection of<br>soft memories ✳</div><div class="gallery-note pink">Always cheering<br>for you ♡</div></div></section>
+<section class="quote-section"><span class="quote-mark">“</span><p>Every little moment<br>is worth remembering.</p><span class="quote-credit">WITH LOVE, FOR JUNG HWAN ♡</span></section>
+</main>
+<footer><span>JUNG HWAN'S DAILY</span><span>MADE WITH ♡ BY FANS</span></footer>
+<nav class="bottom-nav" aria-label="页面导航"><a class="nav-item active" href="#home"><span>⌂</span><small>HOME</small></a><a class="nav-item" href="#archive"><span>▤</span><small>DAILY</small></a><a class="nav-item" href="#gallery-section"><span>▧</span><small>GALLERY</small></a><button class="nav-item" id="nav-admin"><span>♡</span><small>ADMIN</small></button></nav>
+</div>
+<div id="image-lightbox" class="image-lightbox hidden" role="dialog" aria-modal="true" aria-label="查看图片"><button id="lightbox-close" aria-label="关闭">×</button><button id="lightbox-prev" aria-label="上一张">‹</button><img id="lightbox-image" alt="放大查看"><button id="lightbox-next" aria-label="下一张">›</button><p id="lightbox-caption"></p></div>
+<div id="admin-modal" class="modal hidden" role="dialog" aria-modal="true" aria-label="管理员登录"><div class="modal-card"><button id="modal-close" class="modal-close" aria-label="关闭">×</button><div class="modal-handle"></div><p class="eyebrow">A LITTLE PRIVATE SPACE</p><h2>Admin <em>Login</em></h2><p class="modal-desc">管理员使用邮箱接收安全登录链接。</p>
+<form id="login-form"><label class="field-label">EMAIL ADDRESS</label><input id="admin-email" type="email" value="180498829@qq.com" required><button class="primary-btn">SEND MAGIC LINK ↗</button></form><p id="login-message" class="form-message"></p>
+<div id="admin-panel" class="admin-panel hidden"><div class="panel-top"><h3>New memory ✳</h3><button id="logout-btn" class="text-btn" type="button">LOG OUT</button></div>
+<form id="entry-form"><input type="hidden" id="entry-id"><label class="field-label">DATE</label><input id="entry-date" type="date" required><label class="field-label">TITLE</label><input id="entry-title" required placeholder="A lovely day..."><label class="field-label">LOCATION / TAG</label><input id="entry-city" placeholder="Seoul, behind the scenes..."><label class="field-label">STORY</label><textarea id="entry-content" rows="4" placeholder="Write a little memory..."></textarea><label class="field-label">PHOTOS (MULTIPLE ALLOWED)</label><input id="entry-photos" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
+<label class="field-label">VIDEOS (MP4 / WEBM / MOV, UP TO 50MB EACH)</label><input id="entry-videos" type="file" accept="video/mp4,video/webm,video/quicktime" multiple>
+<label class="field-label">STICKERS / EMOJI (用空格或逗号分隔)</label><input id="entry-stickers" placeholder="🐮 🦋 ♡ ✨"><button class="primary-btn">PUBLISH MEMORY ↗</button></form><p id="entry-message" class="form-message"></p>
+<div class="gallery-upload-box"><h3>Upload to Photo ♡</h3><p>独立上传照片，不需要创建 Daily 日记。</p><form id="gallery-upload-form"><label class="field-label">PHOTO DATE</label><input id="gallery-photo-date" type="date" required><label class="field-label">CHOOSE PHOTOS</label><input id="gallery-photo-files" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple required><button class="primary-btn">UPLOAD TO PHOTO ↗</button></form><p id="gallery-upload-message" class="form-message"></p></div>
+<div id="manage-list" class="manage-list"></div></div>
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="app.js"></script>
+</body></html>
